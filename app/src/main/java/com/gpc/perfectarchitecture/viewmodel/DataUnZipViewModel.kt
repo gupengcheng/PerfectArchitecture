@@ -3,12 +3,14 @@ package com.gpc.perfectarchitecture.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
+import com.gpc.perfectarchitecture.model.db.entity.Lunyu
+import com.gpc.perfectarchitecture.model.db.entity.PoemAuthor
+import com.gpc.perfectarchitecture.model.db.entity.Poems
+import com.gpc.perfectarchitecture.model.db.helper.GreenDaoHelper
 import com.gpc.perfectarchitecture.utils.Constant
 import com.gpc.perfectarchitecture.utils.LogUtil
 import com.gpc.perfectarchitecture.utils.UnZipUtil
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
@@ -20,7 +22,7 @@ import java.io.InputStream
 /*
 * @NAME: DataUnZipViewModel
 * @Package: com.gpc.perfectarchitecture.viewmodel
-* @Author : pcg
+* @PoemAuthor : pcg
 * @Create at : 2018/11/12 下午5:09
 * @Description: 解压文件
 */
@@ -63,6 +65,36 @@ class DataUnZipViewModel : ViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(Consumer<Boolean> {
                 LogUtil.e("${it} result")
+                openDb()
+            })
+    }
+
+    fun openDb() {
+        Observable.create(ObservableOnSubscribe<List<Poems>> {
+            val authorList = GreenDaoHelper.getInstance().queryPoem(1, 20)
+            it.onNext(authorList)
+        }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(Consumer<List<Poems>> {
+                it.forEach { LogUtil.e("作者:${it.author} , 简介:${it.content}, 朝代：${it.dynasty}") }
+            })
+
+        Observable.create(ObservableOnSubscribe<List<PoemAuthor>> {
+            val authorList = GreenDaoHelper.getInstance().queryAuthor(1, 20)
+            it.onNext(authorList)
+        }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(Consumer<List<PoemAuthor>> {
+                it.forEach { LogUtil.e("name:${it.name} , desc:${it.desc}, 朝代：${it.dynasty}") }
+            })
+
+        Observable.create(ObservableOnSubscribe<List<Lunyu>> {
+            val authorList = GreenDaoHelper.getInstance().queryLunYu(1, 20)
+            it.onNext(authorList)
+        }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(Consumer<List<Lunyu>> {
+                it.forEach { LogUtil.e("lunyu :${it.content} , chapter:${it.chapter}") }
             })
     }
 

@@ -10,13 +10,12 @@ import com.gpc.perfectarchitecture.utils.Constant
 import com.gpc.perfectarchitecture.utils.LogUtil
 import com.gpc.perfectarchitecture.viewmodel.DataUnZipViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.functions.Consumer
 import java.io.File
 
 /*
 * @NAME: SplashActivity
 * @Package: com.gpc.perfectarchitecture.view
-* @Author : pcg
+* @PoemAuthor : pcg
 * @Create at : 2018/11/12 下午3:52
 * @Description: 闪屏页
 */
@@ -36,15 +35,27 @@ class SplashActivity : BaseActivity() {
     override fun initActivity() {
         mRxPermission = RxPermissions(this)
         mRxPermission.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-            .subscribe({granted ->
+            .subscribe({ granted ->
                 if (granted) {
                     LogUtil.e("granted")
+                    val fileDir =
+                        Environment.getExternalStorageDirectory().absolutePath + File.separator + Constant.SDCARD_FILE_DIRECTORY_NAME
+                    val sdCardDirectoryFile = File(fileDir)
+                    if (sdCardDirectoryFile.exists()) {
+                        var lunyuFile = File(fileDir + File.separator + Constant.LUNYU_FILE_NAME)
+                        var authorFile = File(fileDir + File.separator + Constant.POEM_AUTHOR_FILE_NAME)
+                        var poemFile = File(fileDir + File.separator + Constant.POEM_FILE_NAME)
+
+                        if (lunyuFile.exists() && poemFile.exists() && authorFile.exists()) {
+                            mDataUnZipViewModel.openDb()
+                            return@subscribe
+                        }
+                    }
                     unZipFile()
                 } else {
                     LogUtil.e("not granted")
                 }
             })
-
     }
 
     fun unZipFile() {

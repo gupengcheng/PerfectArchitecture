@@ -6,7 +6,7 @@ import com.gpc.perfectarchitecture.BuildConfig
 /*
 * @NAME: LogUtil
 * @Package: com.gpc.perfectarchitecture.utils
-* @Author : pcg
+* @PoemAuthor : pcg
 * @Create at : 2018/11/12 下午5:44
 * @Description:
 */

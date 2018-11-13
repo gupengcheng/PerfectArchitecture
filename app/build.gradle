@@ -4,8 +4,12 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'org.greenrobot.greendao' // GreenDao apply plugin
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "com.gpc.perfectarchitecture"
         minSdkVersion 19
@@ -29,4 +33,21 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // LiveData + ViewModel
+
+    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
+
+    // RxJava for Kotlin
+
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    // RxAndroid
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    // RxPermission
+//    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    // 数据库框架GreenDao
+
+    implementation 'org.greenrobot:greendao:3.2.2' // add library
 }
